@@ -46,10 +46,6 @@ void check(StackNode* top, char s[]) {
 			push(&top, s[i]);
 			printf("%c", s[i]);
 			break;
-			if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
-				printf("\nno opening bracket\n");
-			}
-			else
 		case ')':
 			if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
 				printf("\nno opening bracket\n");
