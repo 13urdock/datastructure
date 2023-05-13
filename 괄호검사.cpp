@@ -37,36 +37,44 @@ int is_empty(StackNode* top) {
 		return 0;
 }
 
-int check(StackNode* top, char s[]) {
+void check(StackNode* top, char s[]) {
 	int i = 0;
+	printf("%s\n", s);
 	while (s[i] != NULL) {
 		switch (s[i]) {
 		case '(': case'{': case'[':
 			push(&top, s[i]);
 			printf("%c", s[i]);
 			break;
-		if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
-				printf("\nno open bracket\n");
-				return 0;
-		}
+			if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
+				printf("\nno opening bracket\n");
+			}
+			else
 		case ')':
-			if (pop(&top) != '(') {	//짝이 안맞다면
+			if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
+				printf("\nno opening bracket\n");
+			}
+			else if (pop(&top) != '(') {	//짝이 안맞다면
 				printf("\nwrong pair\n");
-				return 0;
 			}
 			else printf("%c", s[i]);
 			break;
 		case '}':
-			if (pop(&top) != '{') {	//짝이 안맞다면
+			if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
+				printf("\nno opening bracket\n");
+			}
+			else if (pop(&top) != '{') {	//짝이 안맞다면
 				printf("\nwrong pair\n");
-				return 0;
 			}
 			else printf("%c", s[i]);
 			break;
 		case ']':
-			if (pop(&top) != '[') {	//짝이 안맞다면
+			if (is_empty(top) == 1) {	//열린 괄호가 안들어 왔을 경우
+				printf("\nno opening bracket\n");
+				
+			}
+			else if (pop(&top) != '[') {	//짝이 안맞다면
 				printf("\nwrong pair\n");
-				return 0;
 			}
 			else printf("%c", s[i]);
 			break;
@@ -74,25 +82,28 @@ int check(StackNode* top, char s[]) {
 		i++;
 	}
 	if (top->data != NULL) {
-		printf("\nno closed bracket\n");	//닫힌 괄호가 없다면
-		return 0;
+		printf("\nno closing bracket\n");	//닫힌 괄호가 없다면
 	}
 	else
 		printf("\nbalanced expression\n");	//통과*^^*
-		return 1;
 }
 
 int main(void) {
 	StackNode* top = create_stack();
-	char s1[20] = "{a+(b+c)}";	//balanced
-	char s2[20] = "a+b)*c}";	//no open bracket
-	char s3[20] = "a+{c-(b+d})";//wrong pair
-	char s4[20] = "(a+b{*c";	//no closed bracket
+	char s1[20] = "{a+(b+c)}";	//올바른 식
+	char s2[20] = "a+b)*c}";	//열린 괄호가 없을 때
+	char s3[20] = "a+{c-(b+d})";//괄호의 짝이 맞지 않을 때
+	char s4[20] = "(a+b{*c";	//닫힌 괄호가 없을 때
 
+	printf("올바른 식\n");
 	check(top, s1);
-	check(top, s2);
-	check(top, s3);
-	check(top, s4);
-	
 
+	printf("\n열린 괄호가 없을 경우\n");
+	check(top, s2);
+
+	printf("\n괄호의 짝이 맞지 않는 경우\n");
+	check(top, s3);
+
+	printf("\n닫힌 괄호가 없을 경우\n");
+	check(top, s4);
 }
