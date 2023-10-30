@@ -84,39 +84,44 @@ void level_order(Node* root){
 Node* min_data_node(Node* root){
 	Node* tmp = root;
 
-	while (tmp->left != NULL)
+	while (tmp->left->left != NULL)
 		tmp = tmp->left;
 
 	return tmp;
 }
 
 //move the data of target to the node to be changed 
-Node* delete_node(Node* root, int data){
-	if (root == NULL)	return root;
-	if (data < root->data){
-		root->left = delete_node(root->left, data);
-	}
-	else if (data > root->data){
-		root->right = delete_node(root->right, data);
-	}
-	else{ //stop when the node and data match
-		if (root->right == NULL){
-			Node* tmp = root;
-			free(root);
-			return tmp->left;
+int delete_node(Node* root, int data){
+	stack<Node*> s;
+	s.push(root);
+	while(1){
+		if (s.empty()) //when the data is not found
+			return 0;
+		Node* node = s.top();
+		if(node->data == data){//when data matches
+			Node* tmp = node;
+			if(node->left == NULL && node->right == NULL){//리프노드일 때
+				free(node);
+				tmp = NULL;
+				return 1;
+			}
+			else if (node->left == NULL){//왼쪽 노드가 비었을 때
+				node = node->right;
+				
+			}
+			else if (node->right == NULL){//오른쪽 노드가 비었을 때
+			
+			}
+			else { //두 쪽 모두 노드가 있을 때 오른쪽 트리에서 제일 작은 값으로 바꾸기
+	
+			}
 		}
-		else if (root->left == NULL){
-			Node* tmp = root;
-			free(root);
-			return tmp->right;
-		}
-		else{
-			Node* tmp = min_data_node(root->right);
-			root->data = tmp->data;
-			root->right = delete_node(root->right, tmp->data);
-		}
+		s.pop();
+		if(node->right != NULL)
+			s.push(node->right);
+		if(node->left != NULL)
+			s.push(node->left);
 	}
-	return root;
 }
 
 //nooo I wanted to use recursion.....
