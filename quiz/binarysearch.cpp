@@ -43,27 +43,12 @@ void add_node(Node* root, int data){
 }
 
 //should've tried iteration.. do it later and solve it with recursion
-Node* search_node(Node* root, int data, int* count){
-	stack<Node*> s;
-	s.push(root);
-	while(1){		
-		if (s.top()->data == data){
-			return s.top();
-		}
-		root = s.top();
-		s.pop();
-		if(root->right != NULL && root->data < data){
-			s.push(root->right);
-			++(*count);
-		}
-		if(root->left != NULL && root->data > data){
-			s.push(root->left);
-			++(*count);
-		}
-		if (root->right == NULL && root->left == NULL) {
-			return NULL;
-		}
-	}
+int search_node(Node* root, int data, int count){
+	if (root == NULL) return 0;
+	if (root->data == data) return count + 1;
+	else if (root->data > data)
+			return search_node(root->left, data, count + 1);
+	else return search_node(root->right, data, count + 1);
 }
 
 void level_order(Node* root){
@@ -84,44 +69,39 @@ void level_order(Node* root){
 Node* min_data_node(Node* root){
 	Node* tmp = root;
 
-	while (tmp->left->left != NULL)
+	while (tmp->left != NULL)
 		tmp = tmp->left;
 
 	return tmp;
 }
 
 //move the data of target to the node to be changed 
-int delete_node(Node* root, int data){
-	stack<Node*> s;
-	s.push(root);
-	while(1){
-		if (s.empty()) //when the data is not found
-			return 0;
-		Node* node = s.top();
-		if(node->data == data){//when data matches
-			Node* tmp = node;
-			if(node->left == NULL && node->right == NULL){//리프노드일 때
-				free(node);
-				tmp = NULL;
-				return 1;
-			}
-			else if (node->left == NULL){//왼쪽 노드가 비었을 때
-				node = node->right;
-				
-			}
-			else if (node->right == NULL){//오른쪽 노드가 비었을 때
-			
-			}
-			else { //두 쪽 모두 노드가 있을 때 오른쪽 트리에서 제일 작은 값으로 바꾸기
-	
-			}
-		}
-		s.pop();
-		if(node->right != NULL)
-			s.push(node->right);
-		if(node->left != NULL)
-			s.push(node->left);
+Node* delete_node(Node* root, int data){
+	if (root == NULL)	return root;
+	if (data < root->data){
+		root->left = delete_node(root->left, data);
 	}
+	else if (data > root->data){
+		root->right = delete_node(root->right, data);
+	}
+	else{ //stop when the node and data match
+		if (root->right == NULL){
+			Node* tmp = root->left;
+			free(root);
+			return tmp;
+		}
+		else if (root->left == NULL){
+			Node* tmp = root->right;
+			free(root);
+			return tmp;
+		}
+		else{
+			Node* tmp = min_data_node(root->right);
+			root->data = tmp->data;
+			root->right = delete_node(root->right, tmp->data);
+		}
+	}
+	return root;
 }
 
 //nooo I wanted to use recursion.....
@@ -142,7 +122,11 @@ void free_node(Node* root){
 	}
 	printf("\n총 %d개의 노드가 free됨.\n", count);
 }
-
+void print_level_order(Node* root){
+	printf("[Level]\n");
+	level_order(root);
+	printf("\n\n");
+}
 void enter_data(Node* root){
 	int data;
 	while(1){	
@@ -154,24 +138,19 @@ void enter_data(Node* root){
 		}
 		add_node(root, data);
 	}
+	print_level_order(root);
 }
 
 void search_data(Node* root){
 	printf("탐색할 노드: ");
-	int count = 1;
+	int c = 0;
 	int data;
 	scanf("%d", &data);
-	Node* target = search_node(root, data, &count);
-	if(target == NULL)
+	int count = search_node(root, data, c);
+	if(count == 0)
 		printf("존재하지 않습니다.\n\n");
 	else
-		printf("%d은 %d회 탐색으로 발견\n\n", target->data, count);
-}
-
-void print_level_order(Node* root){
-	printf("[Level]\n");
-	level_order(root);
-	printf("\n");
+		printf("%d은 %d회 탐색으로 발견\n\n", data, count);
 }
 
 void end_program(Node* root){
@@ -187,19 +166,13 @@ int select_menu(){
 	return menu;
 }
 
-Node* delete_data(Node* root){
+void delete_data(Node* root){
 	printf("삭제할 노드: ");
 	int data;
-	int count = 1;
 	scanf("%d", &data);
-	Node* target = search_node(root, data, &count);
-	if (target == root){
-		target = delete_node(root, target->data);
-		return target;
-	}
-	if (target != NULL)
-		target = delete_node(root, target->data);
-	return root;
+	Node* target = delete_node(root, data);
+	printf("%d 삭제: ", data);	
+	level_order(root);
 }
 
 int main(){
@@ -217,7 +190,7 @@ int main(){
 			print_level_order(root);
 			break;
 		case 4:
-			root = delete_data(root);	
+			delete_data(root);	
 			break;
 		case 5:
 			end_program(root);
