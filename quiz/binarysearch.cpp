@@ -42,13 +42,12 @@ void add_node(Node* root, int data){
 	}
 }
 
-//should've tried iteration.. do it later and solve it with recursion
 int search_node(Node* root, int data, int count){
 	if (root == NULL) return 0;
-	if (root->data == data) return count + 1;
-	else if (root->data > data)
-			return search_node(root->left, data, count + 1);
-	else return search_node(root->right, data, count + 1);
+	if (root->data == data) return count + 1; // 탐색 완료 
+	else if (root->data > data) // 찾는 데이터가 루트노드보다 크면 왼쪽으로 
+			return search_node(root->left, data, count + 1); 
+	else return search_node(root->right, data, count + 1); // or 오른쪽
 }
 
 void level_order(Node* root){
@@ -57,7 +56,8 @@ void level_order(Node* root){
 	while(!q.empty()){
 		printf("%d ", q.front()->data);
 		Node* tmp = q.front();
-		q.pop();
+		q.pop(); // 데이터 출력 후 pop
+		// 출력된 노드의 양쪽 노드 push
 		if(tmp->left != NULL)
 			q.push(tmp->left);
 		if(tmp->right != NULL)
@@ -66,6 +66,7 @@ void level_order(Node* root){
 	printf("\n");
 }
 
+// 삭제할 노드의 오른쪽 트리 중 제일 작은 노드
 Node* min_data_node(Node* root){
 	Node* tmp = root;
 
@@ -75,7 +76,6 @@ Node* min_data_node(Node* root){
 	return tmp;
 }
 
-//move the data of target to the node to be changed 
 Node* delete_node(Node* root, int data){
 	if (root == NULL)	return root;
 	if (data < root->data){
@@ -104,7 +104,7 @@ Node* delete_node(Node* root, int data){
 	return root;
 }
 
-//nooo I wanted to use recursion.....
+// 프로그램 종료 시 노드 삭제
 void free_node(Node* root){
 	stack<Node*> s;
 	int count = 0;
