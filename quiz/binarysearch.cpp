@@ -54,11 +54,11 @@ Node* search_node(Node* root, int data, int* count){
 		s.pop();
 		if(root->right != NULL && root->data < data){
 			s.push(root->right);
-			*count++;
+			++(*count);
 		}
 		if(root->left != NULL && root->data > data){
 			s.push(root->left);
-			*count++;
+			++(*count);
 		}
 		if (root->right == NULL && root->left == NULL) {
 			return NULL;
@@ -82,7 +82,7 @@ void level_order(Node* root){
 }
 
 Node* min_data_node(Node* root){
-	Node* tmp;
+	Node* tmp = root;
 
 	while (tmp->left != NULL)
 		tmp = tmp->left;
@@ -90,6 +90,7 @@ Node* min_data_node(Node* root){
 	return tmp;
 }
 
+//move the data of target to the node to be changed 
 Node* delete_node(Node* root, int data){
 	if (root == NULL)	return root;
 	if (data < root->data){
@@ -110,7 +111,7 @@ Node* delete_node(Node* root, int data){
 			return tmp->right;
 		}
 		else{
-			Node* tmp = min_data_node(root->left);
+			Node* tmp = min_data_node(root->right);
 			root->data = tmp->data;
 			root->right = delete_node(root->right, tmp->data);
 		}
@@ -121,7 +122,7 @@ Node* delete_node(Node* root, int data){
 //nooo I wanted to use recursion.....
 void free_node(Node* root){
 	stack<Node*> s;
-	int count = 1;
+	int count = 0;
 	s.push(root);
 	while(1){
 		if(s.empty()) break;
@@ -152,15 +153,14 @@ void enter_data(Node* root){
 
 void search_data(Node* root){
 	printf("탐색할 노드: ");
-	Node* target;
 	int count = 1;
 	int data;
 	scanf("%d", &data);
-	target = search_node(root, data, &count);
+	Node* target = search_node(root, data, &count);
 	if(target == NULL)
-		printf("%d은 존재하지 않습니다.\n\n", target->data);
+		printf("존재하지 않습니다.\n\n");
 	else
-		printf("%d은 %d회 탐색으로 발견", target->data, count);
+		printf("%d은 %d회 탐색으로 발견\n\n", target->data, count);
 }
 
 void print_level_order(Node* root){
@@ -176,7 +176,7 @@ void end_program(Node* root){
 
 int select_menu(){
 	int menu;
-	printf("1. 입력\n2. 탐색\n3. LevelOrder\n4. 삭제\n5.종료\n");
+	printf("1. 입력\n2. 탐색\n3. LevelOrder\n4. 삭제\n5. 종료\n");
 	printf("번호를 넣으세요: ");
 	scanf("%d", &menu);
 	return menu;
