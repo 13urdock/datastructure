@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// 알파벳과 빈도를 담은 구조체
 typedef struct Element {
 	char letter;
 	int count;
@@ -11,6 +12,7 @@ typedef struct HeapType {
 	int size;
 }HeapType;
 
+// 측정한 빈도수를 Element 배열에 저장
 Element* create_element(int* count) {
 	Element* data = (Element*)malloc(28 * sizeof(Element));
 	for (int i = 0; i < 28; i++) {
@@ -38,12 +40,14 @@ Element remove(HeapType* heap){
 	heap->data[1] = heap->data[heap->size];//마지막노드를 첫번째 노드로 이동
 	--(heap->size);
 	while (child <= heap->size){
+		//자식 노드 중 작은 곳으로 이동
 		if (heap->data[child].count > heap->data[child + 1].count)
 			child++;
+		//자식 노드가 적으면 바꾸기
 		if (heap->data[parent].count > heap->data[child].count){
 			Element tmp = heap->data[parent];
 			heap->data[parent] = heap->data[child];
-			heap->data[child] = heap->data[parent];
+			heap->data[child] = tmp;
 		}
 		else break;
 		parent = child;
@@ -52,6 +56,7 @@ Element remove(HeapType* heap){
 	return removed;
 }
 
+// 10점 문제 출력
 void print_q1(Element* data) {
 	printf("Q1) - 10pt\n");
 	printf("%c(%d)", data[0].letter, data[0].count);
@@ -62,11 +67,13 @@ void print_q1(Element* data) {
 	printf("\n");
 }
 
+// 추가 점수
 void print_q2(HeapType* heap) {
+	int size = heap->size;
 	printf("Q2) - 5pt\n");
 	Element element = remove(heap);
 	printf("%c(%d)", element.letter, element.count);
-	for (int i = 2; i <= heap->size; i++) {
+	for (int i = 2; i <= size; i++) {
 		element = remove(heap);
 		printf(", %c(%d)", element.letter, element.count);
 	}
