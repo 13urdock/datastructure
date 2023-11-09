@@ -31,13 +31,29 @@ HeapType* create_heap(){
 	return heap;
 }
 
-void print_data(Element* data){
+void print_q1(Element* data){
+	printf("Q1) - 10pt\n");
+	printf("%c(%d)", data[0].letter, data[0].count);
+	for (int i = 1; i < 28; i ++){
+		if(data[i].count == 0) continue;
+		printf(" / %c(%d)", data[i].letter, data[i].count);
+	}
+	printf("\n");
+}
+
+void print_q2(Element* data){
+	printf("Q2) - 5pt\n");
 	printf("%c(%d)", data[1].letter, data[1].count);
 	for (int i = 2; i <= 28; i++){
 		Element a = data[i];
 		printf(", %c(%d)", data[i].letter, data[i].count);
 	}
 	printf("\n");
+}
+
+void print_queue(HeapType* heap, Element* data){
+	print_q1(data);
+	//print_q2(heap->data);
 }
 
 void insert(HeapType* heap, Element* data){
@@ -52,18 +68,9 @@ void insert(HeapType* heap, Element* data){
 		}
 		new_data[i] = data[j];
 		printf("after insertting data %d: ", data[i].count);
-		print_data(new_data);
+		print_q2(new_data);
 	}
 	heap->data = new_data;
-}
-
-void print_sorted(HeapType* heap){
-	printf("%c(%d)", heap->data[0].letter, heap->data[0].count);
-	for (int i = 1; i < 28; i ++){
-		if(heap->data[i].count == 0) continue;
-		printf(" / %c(%d)", heap->data[i].letter, heap->data[i].count);
-	}
-	printf("\n");
 }
 
 char* get_str(){
@@ -92,7 +99,6 @@ int main(){
 	int* count = count_char(str);
 	Element* data = create_element(count);
 	HeapType* heap = create_heap();
-
-	print_data(heap->data);
+	print_queue(heap, data);
 	return 0;
 }
