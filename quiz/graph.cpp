@@ -24,6 +24,11 @@ GraphType* create_graph(){
 	GraphType* g = (GraphType*)malloc(sizeof(GraphType));
 	g->n = 0;
 	g->mat = (Mat*)malloc(sizeof(Mat));
+	for(int r = 0; r <  MAXV; r++){
+		for(int c = 0; c < MAXV; c++){
+			g->mat->edge[r][c] = 0;
+		}
+	}
 	insert_vertex(g);
 	return g;
 }
@@ -46,22 +51,27 @@ void default_graph(GraphType* g){
 	insert_edge(g, 3, 4, 3);
 }
 
-void dfs(GraphType* g){
+void dfs(GraphType* g, int v){
 	stack<int> s;
-	int visited[g->n];
-	int total = 0;
-	s.push(0);
+	int sum = 0; // sum of weight
+	int visited[MAXV] = {0};
+	printf("DFS :");
+	s.push(v);// pushing starting point
 	int top = s.top();
 	while (!s.empty()){
-		printf("%d", top);
+		printf(" %d", top);
 		s.pop();
-		for (int i = g->n; i >= 0; i--){
-			if(g->mat->edge[top][i]==1){
-				visited[i] = 1;
-				s.push(i);
+		for (int i = g->n; i > 0; i--){
+			if(g->mat->edge[top][i] && !visited[i]){
+				s.push(i); // push all indexes that hasn't been visited from current vertex
 			}
 		}
+		int prev = top;
+		top = s.top(); // change vertex
+		visited[top]++;
+		sum += g->mat->weight[prev][top];
 	}
+	printf(" = %d", sum);
 }
 
 //menu 1
@@ -85,7 +95,7 @@ void change_weight(GraphType* g){
 
 //menu 3
 void compare_weight(GraphType* g){
-	dfs(g);
+	dfs(g, 0);
 	//mst(g);
 }
 
