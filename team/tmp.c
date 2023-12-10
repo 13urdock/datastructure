@@ -6,14 +6,14 @@ void merge(int* A, int p, int q, int r, int K);
 int inputcnt = 0;
 
 int main(){
-    fastio;
     int N, K;
 		scanf("%d %d", &N, &K);
     int* A = (int*)malloc(N * sizeof(int));
     for(int i=0; i<N; i++)
-        scanf("%d", A[i];
+        scanf("%d", &A[i]);
     merge_sort(A,0,N-1,K);
-    if(inputcnt<K) printf("-1");
+    if(inputcnt<K) 
+			printf("-1");
     return 0;
 }
 
@@ -43,6 +43,7 @@ void merge(int* A, int p, int q, int r, int K){
     i = p, t = 1;
     while(i<=r){
         A[i++] = tmp[t++];
-        if(++inputcnt==K)   cout << tmp[t-1];
+        if(++inputcnt==K)   
+					printf("%d", tmp[t-1]);
     }
 }
